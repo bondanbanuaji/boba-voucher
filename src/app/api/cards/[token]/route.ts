@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCardByTokenServer, claimCardServer, updateCardServer } from '@/lib/server-storage';
+import { getCardByTokenFromDb, claimCardInDb, updateCardInDb } from '@/lib/db/queries';
 
 export async function GET(
   _request: NextRequest,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { token } = await params;
-    const card = await getCardByTokenServer(token);
+    const card = await getCardByTokenFromDb(token);
 
     if (!card) {
       return NextResponse.json(
@@ -34,7 +34,7 @@ export async function PATCH(
     const body = await request.json();
 
     if (body.action === 'claim') {
-      const success = await claimCardServer(token);
+      const success = await claimCardInDb(token);
       if (!success) {
         return NextResponse.json(
           { error: 'Cannot claim card' },
@@ -44,7 +44,7 @@ export async function PATCH(
       return NextResponse.json({ success: true });
     }
 
-    const card = await getCardByTokenServer(token);
+    const card = await getCardByTokenFromDb(token);
     if (!card) {
       return NextResponse.json(
         { error: 'Card not found' },
@@ -52,7 +52,7 @@ export async function PATCH(
       );
     }
 
-    const updated = await updateCardServer(card.id, body);
+    const updated = await updateCardInDb(card.id, body);
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json(

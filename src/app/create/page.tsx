@@ -13,7 +13,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { templates, getTemplate } from '@/lib/templates';
-import { saveCard, generateToken, generateId } from '@/lib/storage';
+import { generateToken, generateId } from '@/lib/storage';
 import type { Card, CardStatus } from '@/types';
 
 async function saveCardToServer(card: Card): Promise<boolean> {
@@ -151,7 +151,6 @@ export default function CreateCardPage() {
       createdAt: now,
     };
 
-    saveCard(card);
     await saveCardToServer(card);
     setCreatedToken(token);
     setStep(5);
@@ -179,18 +178,18 @@ export default function CreateCardPage() {
   }, [form, createdToken]);
 
   function handleCopyLink() {
-    const url = `${window.location.origin}/v/${createdToken}`;
+    const url = `${window.location.origin}/share/${createdToken}`;
     navigator.clipboard.writeText(url);
   }
 
   function handleShareWhatsApp() {
-    const url = `${window.location.origin}/v/${createdToken}`;
+    const url = `${window.location.origin}/share/${createdToken}`;
     const text = `Hay! Ada card ucapan spesial nih buat kamu 🎁\n\nBuka link ini ya: ${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   }
 
   function handleShareTelegram() {
-    const url = `${window.location.origin}/v/${createdToken}`;
+    const url = `${window.location.origin}/share/${createdToken}`;
     const text = `Hay! Ada card ucapan spesial nih buat kamu 🎁`;
     window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
   }
@@ -553,13 +552,23 @@ export default function CreateCardPage() {
                   </p>
                 </div>
 
-                <div className="pixel-border bg-retro-cream p-3">
-                  <p className="font-pixel text-xs text-retro-dark/50">Public URL</p>
-                  <p className="mt-1 truncate font-pixel text-xs sm:text-sm text-retro-dark">
-                    {typeof window !== 'undefined'
-                      ? `${window.location.origin}/v/${createdToken}`
-                      : `/v/${createdToken}`}
-                  </p>
+                <div className="pixel-border bg-retro-cream p-3 space-y-2">
+                  <div>
+                    <p className="font-pixel text-xs text-retro-dark/50">Link untuk kamu (Creator)</p>
+                    <p className="mt-1 truncate font-pixel text-xs sm:text-sm text-retro-dark">
+                      {typeof window !== 'undefined'
+                        ? `${window.location.origin}/v/${createdToken}`
+                        : `/v/${createdToken}`}
+                    </p>
+                  </div>
+                  <div className="border-t border-retro-dark/10 pt-2">
+                    <p className="font-pixel text-xs text-retro-dark/50">Link untuk penerima (Share)</p>
+                    <p className="mt-1 truncate font-pixel text-xs sm:text-sm text-retro-dark">
+                      {typeof window !== 'undefined'
+                        ? `${window.location.origin}/share/${createdToken}`
+                        : `/share/${createdToken}`}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">

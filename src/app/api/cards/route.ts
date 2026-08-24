@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saveCardServer } from '@/lib/server-storage';
+import { saveCardToDb } from '@/lib/db/queries';
 import type { Card } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await saveCardServer(card);
+    await saveCardToDb(card);
     return NextResponse.json({ success: true, token: card.token });
   } catch {
     return NextResponse.json(
