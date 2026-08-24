@@ -16,12 +16,32 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://boba-card.vercel.app"),
   title: {
-    default: "Boba Voucher",
-    template: "%s | Boba Voucher",
+    default: "Boba Card",
+    template: "%s | Boba Card",
   },
   description:
-    "Sistem voucher digital pribadi untuk membuat, mengelola, dan mengirim voucher kepada teman dan keluarga.",
+    "Buat card ucapan personal untuk orang spesial. Pilih template, tulis pesan dari hati, bagikan lewat link unik.",
+  openGraph: {
+    title: "Boba Card",
+    description:
+      "Buat card ucapan personal untuk orang spesial. Pilih template, tulis pesan dari hati, bagikan lewat link unik.",
+    url: "https://boba-card.vercel.app",
+    siteName: "Boba Card",
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Boba Card",
+    description:
+      "Buat card ucapan personal untuk orang spesial. Pilih template, tulis pesan dari hati, bagikan lewat link unik.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /create
+
+Sitemap: https://boba-card.vercel.app/sitemap.xml
