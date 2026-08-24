@@ -37,37 +37,42 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-function DeveloperBadge() {
+function DeveloperBadge({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="inline-flex items-center gap-2.5 rounded-full border border-border/60 bg-card px-3 py-1.5">
-      <Avatar size="sm">
-        <AvatarImage src={DEVELOPER.avatarUrl} alt={DEVELOPER.name} />
-        <AvatarFallback>BB</AvatarFallback>
-      </Avatar>
+    <div className="dev-badge-root" data-compact={compact || undefined}>
+      {!compact && (
+        <span className="dev-badge-label">Product by</span>
+      )}
+      <div className="dev-badge-chip">
+        <Avatar size="sm">
+          <AvatarImage src={DEVELOPER.avatarUrl} alt={DEVELOPER.name} />
+          <AvatarFallback>BB</AvatarFallback>
+        </Avatar>
 
-      <span className="text-sm font-medium text-foreground">
-        {DEVELOPER.name}
-      </span>
+        <span className="dev-badge-name">{DEVELOPER.name}</span>
 
-      <div className="flex items-center gap-0.5">
-        <a
-          href={DEVELOPER.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`GitHub ${DEVELOPER.name}`}
-          className="inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-[var(--hover-bg-subtle)] hover:text-[var(--hover-text)]"
-        >
-          <GithubIcon className="size-3.5" />
-        </a>
-        <a
-          href={DEVELOPER.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Instagram ${DEVELOPER.name}`}
-          className="inline-flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-[var(--hover-bg-subtle)] hover:text-[var(--hover-text)]"
-        >
-          <InstagramIcon className="size-3.5" />
-        </a>
+        <div className="dev-badge-divider" />
+
+        <div className="dev-badge-socials">
+          <a
+            href={DEVELOPER.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`GitHub ${DEVELOPER.name}`}
+            className="dev-badge-icon"
+          >
+            <GithubIcon className="dev-badge-icon-svg" />
+          </a>
+          <a
+            href={DEVELOPER.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Instagram ${DEVELOPER.name}`}
+            className="dev-badge-icon"
+          >
+            <InstagramIcon className="dev-badge-icon-svg" />
+          </a>
+        </div>
       </div>
     </div>
   );

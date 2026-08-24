@@ -16,6 +16,19 @@ import { templates, getTemplate } from '@/lib/templates';
 import { saveCard, generateToken, generateId } from '@/lib/storage';
 import type { Card, CardStatus } from '@/types';
 
+async function saveCardToServer(card: Card): Promise<boolean> {
+  try {
+    const res = await fetch('/api/cards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(card),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 const steps = ['Ucapan', 'Penerima', 'Template', 'Nilai', 'Preview', 'Selesai'];
 
 interface FormData {
@@ -111,7 +124,7 @@ export default function CreateCardPage() {
     if (step > 0) setStep((s) => s - 1);
   }
 
-  function handleCreate() {
+  async function handleCreate() {
     const stepErrors = validateStep(step, form);
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors);
@@ -139,6 +152,7 @@ export default function CreateCardPage() {
     };
 
     saveCard(card);
+    await saveCardToServer(card);
     setCreatedToken(token);
     setStep(5);
   }

@@ -42,3 +42,6 @@ next-env.d.ts
 
 # fonts (large files, not for git)
 /public/font/sf-pro/
+
+# data
+/data/

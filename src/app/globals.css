@@ -208,7 +208,6 @@
 /* ===== hero ===== */
 .hero {
   position: relative;
-  min-height: 100vh;
   background: transparent;
   z-index: 1;
 }
@@ -925,11 +924,48 @@ section.ed {
   .reveal { transform: none; }
 }
 
+/* ===== pixel art banner ===== */
+.pixel-banner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: calc(var(--cell) * 2) var(--gutter) 0;
+}
+.pixel-banner-img {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  display: block;
+  image-rendering: auto;
+  border: 3px solid var(--ink);
+  clip-path: polygon(
+    6px 0, calc(100% - 6px) 0,
+    calc(100% - 6px) 3px, calc(100% - 3px) 3px,
+    calc(100% - 3px) 6px, 100% 6px,
+    100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px),
+    calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px),
+    calc(100% - 6px) 100%, 6px 100%,
+    6px calc(100% - 3px), 3px calc(100% - 3px),
+    3px calc(100% - 6px), 0 calc(100% - 6px),
+    0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0
+  );
+}
+@media (max-width: 720px) {
+  .pixel-banner {
+    padding: calc(var(--cell) * 1.5) 16px 0;
+  }
+  .pixel-banner-img {
+    max-width: 100%;
+  }
+}
+
 /* ===== intro lead ===== */
 .intro {
   position: relative;
   z-index: 2;
-  padding: calc(var(--cell) * 7) var(--gutter) 0;
+  padding: calc(var(--cell) * 3) var(--gutter) 0;
 }
 .intro .wrap {
   max-width: var(--maxw);
@@ -1185,6 +1221,92 @@ section.ed {
 }
 .craft-footer a:hover { color: var(--hover-bg); }
 .craft-footer .ar { width: 13px; height: 13px; }
+
+/* ===== developer badge ===== */
+.dev-badge-root {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.dev-badge-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-craft);
+  line-height: 1;
+}
+.dev-badge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--paper);
+  transition: border-color 0.2s;
+}
+.dev-badge-chip:hover {
+  border-color: var(--line-2);
+}
+.dev-badge-name {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+  white-space: nowrap;
+}
+.dev-badge-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--line);
+  flex-shrink: 0;
+}
+.dev-badge-socials {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.dev-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  color: var(--muted-craft);
+  transition: color 0.2s, background 0.2s;
+  text-decoration: none;
+}
+.dev-badge-icon:hover {
+  color: var(--ink);
+  background: var(--hover-bg-subtle);
+}
+.dev-badge-icon-svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* compact mode — no label, single row */
+.dev-badge-root[data-compact] {
+  flex-direction: row;
+  gap: 0;
+}
+.dev-badge-root[data-compact] .dev-badge-label {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .dev-badge-name {
+    font-size: 11px;
+  }
+  .dev-badge-chip {
+    gap: 6px;
+    padding: 3px 8px 3px 3px;
+  }
+}
 
 /* ===== pixel flicker button hover effect ===== */
 @keyframes pixelFlicker {

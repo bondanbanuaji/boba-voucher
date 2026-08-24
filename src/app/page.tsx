@@ -3,31 +3,21 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
-  Gift,
   ArrowRight,
+  Pencil,
+  Share2,
+  Download,
+  Heart,
 } from 'lucide-react';
 import { templates } from '@/lib/templates';
 import { ScrollReveal } from '@/components/scroll-reveal';
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { LogoSpin } from '@/components/logo-spin';
 import { SpringyCarousel } from '@/components/springy-carousel';
-
-const NAV_LINKS = [
-  { label: 'Cara Kerja', href: '#how-it-works' },
-  { label: 'Fitur', href: '#features' },
-  { label: 'Tentang', href: '#about' },
-];
+import { DeveloperBadge } from '@/components/developer-badge';
+import { Navbar } from '@/components/navbar';
 
 export default function LandingPage() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileOpen]);
-
   return (
     <div className="flex flex-1 flex-col" style={{ background: 'var(--paper)' }}>
       {/* Global Components */}
@@ -39,45 +29,8 @@ export default function LandingPage() {
       {/* CRT Scanline Overlay */}
       <div className="crt-overlay" />
 
-      {/* ─── Masthead ─── */}
-      <nav className="masthead">
-        <div className="mh-l">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="mr-4 sm:mr-6 font-pixel text-xs sm:text-sm tracking-wider uppercase transition-all"
-              style={{ color: 'var(--ink)' }}
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-        <Link href="/" className="mh-c">
-          <div className="wlogo">
-            <div
-              className="flex size-[34px] items-center justify-center"
-              style={{
-                background: 'var(--ink)',
-                clipPath:
-                  'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
-              }}
-            >
-              <Gift className="size-5" style={{ color: 'var(--paper)' }} />
-            </div>
-          </div>
-        </Link>
-        <div className="mh-r">
-          <Link href="/create">
-            <span
-              className="font-pixel text-xs sm:text-sm tracking-wider uppercase transition-all"
-              style={{ color: 'var(--ink)' }}
-            >
-              Buat Card
-            </span>
-          </Link>
-        </div>
-      </nav>
+      {/* ─── Navbar ─── */}
+      <Navbar />
 
       {/* ─── Hero ─── */}
       <section className="hero" id="hero">
@@ -101,18 +54,6 @@ export default function LandingPage() {
                 </span>
               </p>
               <div className="hfoot">
-                <div className="wlogo">
-                  <div
-                    className="flex size-[34px] items-center justify-center"
-                    style={{
-                      background: 'var(--ink)',
-                      clipPath:
-                        'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
-                    }}
-                  >
-                    <Gift className="size-5" style={{ color: 'var(--paper)' }} />
-                  </div>
-                </div>
                 <p className="htag">
                   Buat card ucapan personal dengan desain aesthetic. Bagikan
                   lewat link unik, penerima bisa klaim langsung.
@@ -123,8 +64,17 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ─── Pixel Art Banner ─── */}
+      <div className="pixel-banner">
+        <img
+          src="/img/pixel__.gif"
+          alt="Pixel art decoration"
+          className="pixel-banner-img"
+        />
+      </div>
+
       {/* ─── Intro Lead ─── */}
-      <section className="intro" style={{ marginTop: '-24vh' }}>
+      <section className="intro">
         <div className="wrap">
           <IntroLead />
         </div>
@@ -196,7 +146,7 @@ export default function LandingPage() {
                         'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                     }}
                   >
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                    <Pencil size={48} style={{ color: 'var(--ink)' }} strokeWidth={1.5} />
                   </div>
                   <div className="l">Buat</div>
                   <p>
@@ -213,7 +163,7 @@ export default function LandingPage() {
                         'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                     }}
                   >
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--paper)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                    <Share2 size={48} style={{ color: 'var(--paper)' }} strokeWidth={1.5} />
                   </div>
                   <div className="l">Bagikan</div>
                   <p>
@@ -231,7 +181,7 @@ export default function LandingPage() {
                         'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                     }}
                   >
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--paper)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                    <Download size={48} style={{ color: 'var(--paper)' }} strokeWidth={1.5} />
                   </div>
                   <div className="l">Klaim</div>
                   <p>
@@ -248,7 +198,7 @@ export default function LandingPage() {
                         'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                     }}
                   >
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--paper)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                    <Heart size={48} style={{ color: 'var(--paper)' }} strokeWidth={1.5} />
                   </div>
                   <div className="l">Nikmati</div>
                   <p>
@@ -406,8 +356,8 @@ export default function LandingPage() {
                 mendapatkan sesuatu yang istimewa.
               </p>
               <p className="s" style={{ marginTop: 'calc(var(--cell) * 2)' }}>
-                Dibuat dengan React &amp; Next.js. Card tersimpan di
-                browser kamu — tidak ada server, tidak ada database.
+                Dibuat dengan React &amp; Next.js. Card tersimpan
+                secara online — bisa diakses dari mana saja.
               </p>
             </div>
           </div>
@@ -436,31 +386,15 @@ export default function LandingPage() {
       <footer className="craft-footer">
         <div className="footer-inner">
           <div className="flex items-center gap-3">
-            <div
-              className="flex size-8 items-center justify-center"
-              style={{
-                background: 'var(--retro-accent)',
-                clipPath:
-                  'polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 2px, calc(100% - 2px) 2px, calc(100% - 2px) 4px, 100% 4px, 100% calc(100% - 4px), calc(100% - 2px) calc(100% - 4px), calc(100% - 2px) calc(100% - 2px), calc(100% - 4px) calc(100% - 2px), calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 2px), 2px calc(100% - 2px), 2px calc(100% - 4px), 0 calc(100% - 4px), 0 4px, 2px 4px, 2px 2px, 4px 2px, 4px 0)',
-              }}
-            >
-              <Gift className="size-4" style={{ color: '#fff' }} />
-            </div>
             <span
               className="font-pixel text-xs sm:text-sm"
-              style={{ color: 'var(--paper)' }}
+              style={{ color: 'var(--muted-craft)' }}
             >
-              BOBA CARD
+              &copy; 2026 Boba.dev
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub <span className="ar">↗</span>
-            </a>
+            <DeveloperBadge />
           </div>
         </div>
       </footer>
