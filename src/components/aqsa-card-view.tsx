@@ -356,8 +356,8 @@ export default function AqsaCardView({ card, staticView = false }: { card: Card;
           width: 100%;
           margin-top: 12px;
           padding: 12px 16px;
-          background: rgba(255, 255, 255, 0.15);
-          border: 2px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.25);
+          border: 2px solid var(--card-accent);
           border-radius: 12px;
           backdrop-filter: blur(4px);
           text-align: center;
@@ -366,9 +366,15 @@ export default function AqsaCardView({ card, staticView = false }: { card: Card;
           font-family: 'Dancing Script', cursive;
           font-size: 0.95rem;
           line-height: 1.6;
-          color: #ffffff;
+          color: var(--card-accent);
           margin: 0;
-          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+          text-shadow: 
+            1px 1px 0 var(--card-white),
+            -1px 1px 0 var(--card-white),
+            1px -1px 0 var(--card-white),
+            -1px -1px 0 var(--card-white),
+            0 0 4px rgba(255, 255, 255, 0.5);
+          font-weight: 700;
         }
 
         /* ── Hat ── */
