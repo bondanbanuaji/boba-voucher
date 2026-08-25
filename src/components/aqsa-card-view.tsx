@@ -351,6 +351,26 @@ export default function AqsaCardView({ card, staticView = false }: { card: Card;
         .boba-title-line1 { color: #ffffff; }
         .boba-title-line2 { color: #ffffff; }
 
+        /* ── Message ── */
+        .boba-message {
+          width: 100%;
+          margin-top: 12px;
+          padding: 12px 16px;
+          background: rgba(255, 255, 255, 0.15);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 12px;
+          backdrop-filter: blur(4px);
+          text-align: center;
+        }
+        .boba-message p {
+          font-family: 'Dancing Script', cursive;
+          font-size: 0.95rem;
+          line-height: 1.6;
+          color: #ffffff;
+          margin: 0;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
         /* ── Hat ── */
         .boba-hat {
           position: absolute;
@@ -1139,6 +1159,7 @@ export default function AqsaCardView({ card, staticView = false }: { card: Card;
           }
           .boba-left, .boba-right { width: 100%; }
           .boba-title { font-size: 1.4rem; letter-spacing: 6px; }
+          .boba-message p { font-size: 0.85rem; }
           .boba-image-circle { width: 200px; height: 200px; }
           .boba-hat { width: 70px; right: -80px; top: -40px !important; }
           .boba-flag { width: 160px; }
@@ -1177,6 +1198,12 @@ export default function AqsaCardView({ card, staticView = false }: { card: Card;
                   <img src="/aqsa/hat.png" alt="" width="110" />
                 </div>
               </div>
+
+              {card.message && (
+                <div className="boba-message">
+                  <p>{card.message}</p>
+                </div>
+              )}
 
               <div className="boba-date-pill">
                 <span className="boba-star-icon">&#9733;</span>
@@ -1259,7 +1286,7 @@ export default function AqsaCardView({ card, staticView = false }: { card: Card;
         {/* Footer */}
         <div className="boba-footer-info">
           <span>Dari {card.creatorName} &middot; {createdDate}</span>
-          <span>{card.currency}{card.value.toLocaleString('id-ID')}</span>
+          <span>{card.giftEmoji} {card.currency}{card.value.toLocaleString('id-ID')}</span>
         </div>
       </div>
 
