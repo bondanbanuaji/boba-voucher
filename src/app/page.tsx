@@ -29,11 +29,20 @@ export default function LandingPage() {
       {/* CRT Scanline Overlay */}
       <div className="crt-overlay" />
 
+      {/* Skip to content for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-white focus:text-black"
+      >
+        Lewati ke konten utama
+      </a>
+
       {/* ─── Navbar ─── */}
       <Navbar />
 
       {/* ─── Hero ─── */}
-      <section className="hero" id="hero">
+      <main id="main-content" role="main">
+      <section className="hero" id="hero" aria-label="Hero">
         <div className="hhead">
           <div className="hgrid">
             <h1 className="hl">
@@ -81,7 +90,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Template Carousel ─── */}
-      <section className="caro" id="work">
+      <section className="caro" id="work" aria-label="Template Card">
         <div className="ch reveal" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 'calc(var(--cell) * 1.5)' }}>
           <h2 style={{ maxWidth: '18ch' }}>
             5 template cantik untuk setiap momen.
@@ -119,7 +128,7 @@ export default function LandingPage() {
 
       {/* ─── How It Works (Editorial Style) ─── */}
       <div className="sheet">
-        <section className="ed" id="how-it-works">
+        <section className="ed" id="how-it-works" aria-label="Cara Kerja">
           <div className="wrap">
             <div className="head reveal">
               <h2>Tiga langkah sederhana.</h2>
@@ -158,12 +167,15 @@ export default function LandingPage() {
                   <div
                     className="mx-auto mb-4 flex size-[128px] items-center justify-center"
                     style={{
-                      background: 'var(--retro-accent)',
+                      background: '#FF6B35',
+                      overflow: 'visible',
+                      WebkitClipPath:
+                        'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                       clipPath:
                         'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                     }}
                   >
-                    <Share2 size={48} style={{ color: 'var(--paper)' }} strokeWidth={1.5} />
+                    <Share2 size={48} color="#ffffff" strokeWidth={1.5} />
                   </div>
                   <div className="l">Bagikan</div>
                   <p>
@@ -176,12 +188,15 @@ export default function LandingPage() {
                   <div
                     className="mx-auto mb-4 flex size-[128px] items-center justify-center"
                     style={{
-                      background: 'var(--retro-green)',
+                      background: '#2D9C6F',
+                      overflow: 'visible',
+                      WebkitClipPath:
+                        'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                       clipPath:
                         'polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px), 0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0)',
                     }}
                   >
-                    <Download size={48} style={{ color: 'var(--paper)' }} strokeWidth={1.5} />
+                    <Download size={48} color="#ffffff" strokeWidth={1.5} />
                   </div>
                   <div className="l">Klaim</div>
                   <p>
@@ -212,7 +227,7 @@ export default function LandingPage() {
       </div>
 
       {/* ─── Process Steps ─── */}
-      <section className="proc" id="process">
+      <section className="proc" id="process" aria-label="Proses Pembuatan">
         <div className="wrap">
           <div className="ph reveal">
             <h2>
@@ -266,7 +281,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Pull Quote ─── */}
-      <section className="quote">
+      <section className="quote" aria-label="Kutipan">
         <div className="wrap">
           <p className="q">
             Memberi hadiah tidak harus mahal, tapi harus bermakna.
@@ -282,7 +297,7 @@ export default function LandingPage() {
 
       {/* ─── Features (Editorial Style) ─── */}
       <div className="sheet">
-        <section className="ed" id="features">
+        <section className="ed" id="features" aria-label="Fitur">
           <div className="wrap">
             <div className="head reveal">
               <h2>Dirancang untuk momen spesial.</h2>
@@ -338,7 +353,7 @@ export default function LandingPage() {
 
       {/* ─── About (Editorial Style) ─── */}
       <div className="sheet">
-        <section className="ed" id="about">
+        <section className="ed" id="about" aria-label="Tentang Boba Card">
           <div className="wrap">
             <div className="head reveal">
               <h2>Dibuat dengan perhatian untuk momen spesial.</h2>
@@ -365,7 +380,7 @@ export default function LandingPage() {
       </div>
 
       {/* ─── CTA ─── */}
-      <section className="cta" id="contact">
+      <section className="cta" id="contact" aria-label="Mulai Sekarang">
         <div className="wrap">
           <h2 className="reveal">Buat card pertama kamu.</h2>
           <p className="meta reveal">
@@ -381,6 +396,7 @@ export default function LandingPage() {
           </p>
         </div>
       </section>
+      </main>
 
       {/* ─── Footer ─── */}
       <footer className="craft-footer">

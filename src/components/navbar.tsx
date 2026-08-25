@@ -215,6 +215,7 @@ function Navbar() {
         .nav-overlay-link:nth-child(2) { transition-delay: 0.25s; }
         .nav-overlay-link:nth-child(3) { transition-delay: 0.35s; }
         .nav-overlay-link:nth-child(4) { transition-delay: 0.45s; }
+        .nav-overlay-link:nth-child(5) { transition-delay: 0.55s; }
 
         .nav-overlay-link:hover {
           color: var(--muted-craft);
@@ -332,6 +333,9 @@ function Navbar() {
           </Link>
 
           <div className="nav-right">
+            <Link href="/history" className="nav-cta" style={{ marginRight: 24 }}>
+              History
+            </Link>
             <Link href="/create" className="nav-cta">
               Buat Card
             </Link>
@@ -371,6 +375,14 @@ function Navbar() {
             ))}
 
             <div className="nav-overlay-deco" />
+
+            <Link
+              href="/history"
+              className="nav-overlay-link"
+              onClick={() => setMobileOpen(false)}
+            >
+              History
+            </Link>
 
             <Link
               href="/create"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
   Check,
@@ -11,9 +11,15 @@ import {
   ExternalLink,
   Heart,
   AlertCircle,
+  Download,
+  FileImage,
+  X,
 } from 'lucide-react';
 import { templates, getTemplate } from '@/lib/templates';
-import { generateToken, generateId } from '@/lib/storage';
+import { generateToken, generateId, saveCardToHistory } from '@/lib/storage';
+import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
+import AqsaCardView from '@/components/aqsa-card-view';
 import type { Card, CardStatus } from '@/types';
 
 async function saveCardToServer(card: Card): Promise<boolean> {
@@ -100,6 +106,9 @@ export default function CreateCardPage() {
   const [form, setForm] = useState<FormData>(initialData);
   const [createdToken, setCreatedToken] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
+  const [showPreview, setShowPreview] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   function updateForm(patch: Partial<FormData>) {
     setForm((prev) => ({ ...prev, ...patch }));
@@ -152,6 +161,7 @@ export default function CreateCardPage() {
     };
 
     await saveCardToServer(card);
+    saveCardToHistory(card);
     setCreatedToken(token);
     setStep(5);
   }
@@ -194,6 +204,52 @@ export default function CreateCardPage() {
     window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
   }
 
+  const handleDownloadPng = useCallback(async () => {
+    if (!previewRef.current || downloading) return;
+    setDownloading(true);
+    try {
+      const dataUrl = await toPng(previewRef.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: undefined,
+      });
+      const link = document.createElement('a');
+      link.download = `card-${previewCard.title.replace(/\s+/g, '-').toLowerCase()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Download PNG failed:', err);
+    } finally {
+      setDownloading(false);
+    }
+  }, [downloading, previewCard.title]);
+
+  const handleDownloadPdf = useCallback(async () => {
+    if (!previewRef.current || downloading) return;
+    setDownloading(true);
+    try {
+      const dataUrl = await toPng(previewRef.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        backgroundColor: '#ffffff',
+      });
+      const img = new Image();
+      img.src = dataUrl;
+      await new Promise((resolve) => { img.onload = resolve; });
+      const pdf = new jsPDF({
+        orientation: img.width > img.height ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [img.width / 3, img.height / 3],
+      });
+      pdf.addImage(dataUrl, 'PNG', 0, 0, img.width / 3, img.height / 3);
+      pdf.save(`card-${previewCard.title.replace(/\s+/g, '-').toLowerCase()}.pdf`);
+    } catch (err) {
+      console.error('Download PDF failed:', err);
+    } finally {
+      setDownloading(false);
+    }
+  }, [downloading, previewCard.title]);
+
   return (
     <div className="flex min-h-screen flex-1 flex-col bg-retro-cream">
       <div className="crt-overlay" />
@@ -219,9 +275,9 @@ export default function CreateCardPage() {
           </div>
         </Link>
         <div className="mh-r">
-          <span className="font-pixel text-xs sm:text-sm tracking-wider uppercase" style={{ color: 'var(--muted-craft)' }}>
-            Buat Card
-          </span>
+          <Link href="/history" className="font-pixel text-xs sm:text-sm tracking-wider uppercase" style={{ color: 'var(--muted-craft)' }}>
+            History
+          </Link>
         </div>
       </header>
 
@@ -584,10 +640,35 @@ export default function CreateCardPage() {
                   </button>
                 </div>
 
-                <Link href={`/v/${createdToken}`}>
-                  <button className="pixel-border mt-2 flex items-center justify-center gap-2 bg-white px-4 py-2.5 font-pixel text-xs sm:text-sm text-retro-dark">
+                <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
+                  <button
+                    onClick={() => setShowPreview(true)}
+                    className="pixel-border flex items-center justify-center gap-2 bg-white px-4 py-2.5 font-pixel text-xs sm:text-sm text-retro-dark"
+                  >
                     <ExternalLink className="size-4" />
                     Lihat Card
+                  </button>
+                  <button
+                    onClick={handleDownloadPng}
+                    disabled={downloading}
+                    className="pixel-border flex items-center justify-center gap-2 bg-white px-4 py-2.5 font-pixel text-xs sm:text-sm text-retro-dark disabled:opacity-50"
+                  >
+                    <FileImage className="size-4" />
+                    {downloading ? 'Downloading...' : 'Download PNG'}
+                  </button>
+                  <button
+                    onClick={handleDownloadPdf}
+                    disabled={downloading}
+                    className="pixel-border flex items-center justify-center gap-2 bg-white px-4 py-2.5 font-pixel text-xs sm:text-sm text-retro-dark disabled:opacity-50"
+                  >
+                    <Download className="size-4" />
+                    {downloading ? 'Downloading...' : 'Export PDF'}
+                  </button>
+                </div>
+
+                <Link href="/history">
+                  <button className="pixel-border mt-2 flex items-center justify-center gap-2 bg-white px-4 py-2.5 font-pixel text-xs sm:text-sm text-retro-dark">
+                    📋 Lihat History
                   </button>
                 </Link>
               </div>
@@ -622,6 +703,46 @@ export default function CreateCardPage() {
           )}
         </div>
       </main>
+
+      {/* Preview Modal */}
+      {showPreview && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowPreview(false);
+          }}
+        >
+          <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white pixel-border">
+            <button
+              onClick={() => setShowPreview(false)}
+              className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center bg-white pixel-border text-retro-dark hover:bg-retro-cream"
+            >
+              <X className="size-4" />
+            </button>
+            <div ref={previewRef}>
+              <AqsaCardView card={previewCard} staticView={true} />
+            </div>
+            <div className="flex flex-col gap-2 p-4 sm:flex-row sm:justify-center">
+              <button
+                onClick={handleDownloadPng}
+                disabled={downloading}
+                className="pixel-border flex items-center justify-center gap-2 bg-white px-4 py-2.5 font-pixel text-xs sm:text-sm text-retro-dark disabled:opacity-50"
+              >
+                <FileImage className="size-4" />
+                {downloading ? 'Downloading...' : 'Download PNG'}
+              </button>
+              <button
+                onClick={handleDownloadPdf}
+                disabled={downloading}
+                className="pixel-border flex items-center justify-center gap-2 bg-white px-4 py-2.5 font-pixel text-xs sm:text-sm text-retro-dark disabled:opacity-50"
+              >
+                <Download className="size-4" />
+                {downloading ? 'Downloading...' : 'Export PDF'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

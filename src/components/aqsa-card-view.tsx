@@ -13,19 +13,23 @@ import type { Card } from '@/types';
 
 type ClaimStep = 'view' | 'confirm' | 'loading' | 'success';
 
-function AnimatedTitle({ text, delay }: { text: string; delay: number }) {
-  const [visible, setVisible] = useState(false);
+function AnimatedTitle({ text, delay, instant }: { text: string; delay: number; instant?: boolean }) {
+  const [visible, setVisible] = useState(instant || false);
   useEffect(() => {
+    if (instant) {
+      setVisible(true);
+      return;
+    }
     const t = setTimeout(() => setVisible(true), delay);
     return () => clearTimeout(t);
-  }, [delay]);
+  }, [delay, instant]);
 
   return (
     <h1 className="boba-title-text">
       {text.split('').map((char, i) => (
         <span
           key={i}
-          style={{ animationDelay: `${delay + i * 0.08}s` }}
+          style={instant ? { animationDelay: '0s' } : { animationDelay: `${delay + i * 0.08}s` }}
           className={visible ? 'boba-letter-visible' : 'boba-letter-hidden'}
         >
           {char === ' ' ? '\u00A0' : char}
@@ -56,12 +60,11 @@ function RotatingCircle({ text }: { text: string }) {
   );
 }
 
-export default function AqsaCardView({ card }: { card: Card }) {
+export default function AqsaCardView({ card, staticView = false }: { card: Card; staticView?: boolean }) {
   const [step, setStep] = useState<ClaimStep>('view');
   const [downloading, setDownloading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showMail, setShowMail] = useState(false);
-  const [dateText, setDateText] = useState('');
   const cardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -76,6 +79,8 @@ export default function AqsaCardView({ card }: { card: Card }) {
     month: 'long',
     year: 'numeric',
   });
+
+  const [dateText, setDateText] = useState(staticView ? expiry : '');
 
   const createdDate = new Date(card.createdAt).toLocaleDateString('id-ID', {
     day: 'numeric',
@@ -94,6 +99,7 @@ export default function AqsaCardView({ card }: { card: Card }) {
   const StatusIcon = statusInfo.icon;
 
   useEffect(() => {
+    if (staticView) return;
     const datetxt = expiry;
     let currentIndex = 0;
     const timer = setTimeout(() => {
@@ -108,7 +114,7 @@ export default function AqsaCardView({ card }: { card: Card }) {
       return () => clearInterval(interval);
     }, 12000);
     return () => clearTimeout(timer);
-  }, [expiry]);
+  }, [expiry, staticView]);
 
   function handleCopyLink() {
     navigator.clipboard.writeText(window.location.href);
@@ -136,7 +142,7 @@ export default function AqsaCardView({ card }: { card: Card }) {
     try {
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
-        pixelRatio: 2,
+        pixelRatio: 3,
         backgroundColor: undefined,
       });
       const link = document.createElement('a');
@@ -209,6 +215,55 @@ export default function AqsaCardView({ card }: { card: Card }) {
           font-family: 'Nunito', sans-serif;
         }
 
+        ${staticView ? `
+        .boba-card .boba-flags,
+        .boba-card .boba-image-box,
+        .boba-card .boba-hat,
+        .boba-card .boba-date-pill,
+        .boba-card .boba-name-pill,
+        .boba-card .boba-claim-btn-wrapper,
+        .boba-card .boba-rotating-circle-wrapper,
+        .boba-card .boba-star,
+        .boba-card .boba-flower,
+        .boba-card .boba-smiley {
+          animation: none !important;
+          transform: none !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+          width: auto !important;
+          height: auto !important;
+          scale: 1 !important;
+        }
+        .boba-card .boba-flags {
+          transform: translateY(-10px) !important;
+        }
+        .boba-card .boba-image-box {
+          transform: translateY(0) !important;
+        }
+        .boba-card .boba-date-pill {
+          width: 260px !important;
+          height: 44px !important;
+        }
+        .boba-card .boba-name-pill {
+          transform: scale(1) !important;
+        }
+        .boba-card .boba-claim-btn-wrapper {
+          transform: scale(1) !important;
+        }
+        .boba-card .boba-rotating-circle-wrapper {
+          transform: scale(1) !important;
+        }
+        .boba-card .boba-star {
+          transform: scale(1) !important;
+        }
+        .boba-card .boba-flower {
+          transform: scale(1) !important;
+        }
+        .boba-card .boba-smiley {
+          transform: scale(1) !important;
+        }
+        ` : ''}
+
         .boba-card-inner {
           position: relative;
           width: 100%;
@@ -275,6 +330,7 @@ export default function AqsaCardView({ card }: { card: Card }) {
         }
         .boba-title-text span {
           display: inline-block;
+          color: #ffffff;
           text-shadow: 3px 3px 0 var(--card-dark),
                        -2px 3px 0 var(--card-dark),
                        3px -2px 0 var(--card-dark),
@@ -292,8 +348,8 @@ export default function AqsaCardView({ card }: { card: Card }) {
         @keyframes boba-txt-up {
           100% { transform: translateY(0); opacity: 1; visibility: visible; }
         }
-        .boba-title-line1 { color: var(--card-white); }
-        .boba-title-line2 { color: var(--card-accent); }
+        .boba-title-line1 { color: #ffffff; }
+        .boba-title-line2 { color: #ffffff; }
 
         /* ── Hat ── */
         .boba-hat {
@@ -1115,8 +1171,8 @@ export default function AqsaCardView({ card }: { card: Card }) {
             {/* Left */}
             <div className="boba-left">
               <div className="boba-title">
-                <AnimatedTitle text={line1} delay={3500} />
-                {line2 && <AnimatedTitle text={line2} delay={4500} />}
+                <AnimatedTitle text={line1} delay={3500} instant={staticView} />
+                {line2 && <AnimatedTitle text={line2} delay={4500} instant={staticView} />}
                 <div className="boba-hat">
                   <img src="/aqsa/hat.png" alt="" width="110" />
                 </div>
